@@ -41,8 +41,7 @@ function authenticate(ws) {
 exports.authenticate = authenticate;
 
 // Heartbeat
-function heartbeat(ws, data) {
-    // data['heartbeat_interval'] 
+function heartbeat(ws, data) { 
     let last_beat = data['heartbeat_interval'] / 2
     setInterval(() => {
         console.log("\nSending heartbeat: " + last_beat)
@@ -61,10 +60,8 @@ const filter = [
     'CHANNEL_UPDATE',
     'CHANNEL_DELETE',
     'READY_SUPPLEMENTAL',
-    'VOICE_STATE_UPDATE',
     'GUILD_MEMBER_UPDATE',
     'STREAM_UPDATE',
-
     'VOICE_SERVER_UPDATE'
 ]
 
@@ -75,6 +72,10 @@ function ready(ws, data) {
             voice(ws)
             break
 
+        case 'VOICE_STATE_UPDATE':
+            session_id = data['d'].session_id
+            break
+
         case 'STREAM_CREATE':
             rtc_server_id = data['d'].rtc_server_id
             break
@@ -82,6 +83,13 @@ function ready(ws, data) {
         case 'STREAM_SERVER_UPDATE':
             stream_token = data['d'].token
             stream_endpoint = data['d'].endpoint
+
+            require('./stream')({
+                server_id: rtc_server_id,
+                session_id: session_id,
+                token: stream_token,
+                endpoint: stream_endpoint
+            })
             break
 
         default:
@@ -140,5 +148,5 @@ function screen(ws) {
 exports.screen = screen;
 
 // Data variables
-let rtc_server_id
+let rtc_server_id, session_id
 let stream_token, stream_endpoint
