@@ -55,7 +55,31 @@ exports.heartbeat = heartbeat;
 
 // Ready
 function ready(ws, data) {
-    //console.log(data)
+    switch (data['t']) {
+        case 'READY':
+            console.log('Connected')
+            voice(ws)
+            break
+    }
 }
 
 exports.ready = ready;
+
+// Voice
+let voice_connected = false
+function voice(ws) {
+    ws.send(JSON.stringify({
+        op: 4,
+        d: {
+            guild_id: !voice_connected && "822789081309773836",
+            channel_id: !voice_connected && "822789081749651456",
+            self_mute: true,
+            self_deaf: false,
+            self_video: false,
+            preferred_region: null
+        }
+    }))
+    voice_connected = true
+}
+
+exports.voice = voice;

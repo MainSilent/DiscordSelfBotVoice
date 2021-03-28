@@ -5,10 +5,7 @@ const events = require('./events')
 ws_url = 'wss://gateway.discord.gg/?encoding=json&v=8'
 const ws = new WebSocket(ws_url)
 
-ws.on('open', () => {
-    console.log('Connected')
-    events.authenticate(ws)
-})
+ws.on('open', () => events.authenticate(ws))
 
 ws.on('message', rawData => {
     const data = JSON.parse(rawData.toString('utf8'))
@@ -35,4 +32,9 @@ ws.on('message', rawData => {
 
 ws.on('close', () => {
     console.error("Connection Closed")
+})
+
+process.on('SIGINT', () => {
+    events.voice(ws)
+    process.kill(process.pid)
 })
