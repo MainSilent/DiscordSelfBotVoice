@@ -17,8 +17,8 @@ module.exports = mdata => {
                 break
     
             // Ready
-            //case 2:
-                //events.ready(ws, data)
+            case 2:
+                events.ready(ws, data['d'])
                 break
     
             // Heartbeat ACK
@@ -27,7 +27,7 @@ module.exports = mdata => {
                 break
     
             default:
-                //console.log(data)
+                console.log(data)
         }
     })
     
