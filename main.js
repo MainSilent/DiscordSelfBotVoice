@@ -17,6 +17,17 @@ ws.on('message', rawData => {
         case 10:
             events.heartbeat(ws, data['d'])
             break
+
+        // Ready
+        case 0:
+            events.ready(ws, data)
+            break
+
+        // Heartbeat ACK
+        case 11:
+            console.log("Heartbeat Received")
+            break
+
         default:
             console.log(data)
     }

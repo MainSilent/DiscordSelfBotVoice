@@ -42,9 +42,20 @@ exports.authenticate = authenticate;
 
 // Heartbeat
 function heartbeat(ws, data) {
+    // data['heartbeat_interval'] 
+    let last_beat = data['heartbeat_interval'] / 2
     setInterval(() => {
-        ws.send(JSON.stringify({ op: 1 }))
-    }, data['heartbeat_interval'])
+        console.log("Sending heartbeat: " + last_beat)
+        ws.send(JSON.stringify({ op: 1, d: last_beat }))
+        last_beat += data['heartbeat_interval'] / 2
+    }, last_beat)
 }
 
 exports.heartbeat = heartbeat;
+
+// Ready
+function ready(ws, data) {
+    //console.log(data)
+}
+
+exports.ready = ready;
