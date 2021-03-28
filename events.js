@@ -45,8 +45,11 @@ function heartbeat(ws, data) {
     // data['heartbeat_interval'] 
     let last_beat = data['heartbeat_interval'] / 2
     setInterval(() => {
-        console.log("Sending heartbeat: " + last_beat)
-        ws.send(JSON.stringify({ op: 1, d: last_beat }))
+        console.log("\nSending heartbeat: " + last_beat)
+        ws.send(JSON.stringify({
+            op: 1,
+            d: last_beat
+        }))
         last_beat += data['heartbeat_interval'] / 2
     }, last_beat)
 }
@@ -54,12 +57,35 @@ function heartbeat(ws, data) {
 exports.heartbeat = heartbeat;
 
 // Ready
+const filter = [
+    'CHANNEL_UPDATE',
+    'CHANNEL_DELETE',
+    'READY_SUPPLEMENTAL',
+    'VOICE_STATE_UPDATE',
+    'GUILD_MEMBER_UPDATE',
+    'STREAM_UPDATE',
+
+    'VOICE_SERVER_UPDATE'
+]
+
 function ready(ws, data) {
     switch (data['t']) {
         case 'READY':
             console.log('Connected')
             voice(ws)
             break
+
+        case 'STREAM_CREATE':
+            rtc_server_id = data['d'].rtc_server_id
+            break
+
+        case 'STREAM_SERVER_UPDATE':
+            stream_token = data['d'].token
+            stream_endpoint = data['d'].endpoint
+            break
+
+        default:
+            !filter.includes(data['t']) && console.log(data)
     }
 }
 
@@ -67,6 +93,7 @@ exports.ready = ready;
 
 // Voice
 let voice_connected = false
+
 function voice(ws) {
     ws.send(JSON.stringify({
         op: 4,
@@ -111,3 +138,7 @@ function screen(ws) {
 }
 
 exports.screen = screen;
+
+// Data variables
+let rtc_server_id
+let stream_token, stream_endpoint
