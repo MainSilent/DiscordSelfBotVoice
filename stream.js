@@ -25,9 +25,14 @@ module.exports = mdata => {
             case 6:
                 console.log("Stream Heartbeat Received")
                 break
+
+            // Session Description
+            case 4:
+                events.session(ws, data['d'])
+                break
     
             default:
-                console.log(data)
+                ![5,15].includes(data['op']) && console.log(data)
         }
     })
     

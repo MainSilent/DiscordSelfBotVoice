@@ -40,6 +40,7 @@ exports.heartbeat = heartbeat;
 
 // Ready
 function ready(ws, data) {
+    console.log(data);
     // Select Protocol
     ws.send(JSON.stringify({
         "op": 1,
@@ -82,3 +83,10 @@ function ready(ws, data) {
 }
 
 exports.ready = ready;
+
+// Session Description
+function session(ws, data) {
+    //console.log(data);
+}
+
+exports.session = session;
