@@ -73,13 +73,41 @@ function voice(ws) {
         d: {
             guild_id: !voice_connected && "822789081309773836",
             channel_id: !voice_connected && "822789081749651456",
-            self_mute: true,
+            self_mute: false,
             self_deaf: false,
             self_video: false,
             preferred_region: null
         }
-    }))
+    }), () => {
+        console.log("Joined voice channel")
+        screen(ws)
+    })
     voice_connected = true
 }
 
 exports.voice = voice;
+
+// Screen Share
+function screen(ws) {
+    // start sharing
+    ws.send(JSON.stringify({
+        op: 18,
+        d: {
+            type: "guild",
+            guild_id: "822789081309773836",
+            channel_id: "822789081749651456",
+            preferred_region: null
+        }
+    }), () => {
+        // send stream key
+        ws.send(JSON.stringify({
+            op: 22,
+            d: {
+                paused: false,
+                stream_key: "guild:822789081309773836:822789081749651456:820709017516769281"
+            }
+        }), () => console.log("Stream started"))
+    })
+}
+
+exports.screen = screen;
