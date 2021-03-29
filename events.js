@@ -1,9 +1,11 @@
+require('dotenv').config()
+
 // Authenticate
 function authenticate(ws) {
     ws.send(JSON.stringify({
         op: 2,
         d: {
-            token: "ODIwNzA5MDE3NTE2NzY5Mjgx.YE5HKQ.3pnpetwzqZNmEKCyWSKGbF0z-Ec",
+            token: process.env.token,
             capabilities: 61,
             properties: {
                 os: "Linux",
@@ -106,8 +108,8 @@ function voice(ws) {
     ws.send(JSON.stringify({
         op: 4,
         d: {
-            guild_id: !voice_connected && "822789081309773836",
-            channel_id: !voice_connected && "822789081749651456",
+            guild_id: !voice_connected && process.env.guild_id,
+            channel_id: !voice_connected && process.env.channel_id,
             self_mute: false,
             self_deaf: false,
             self_video: false,
@@ -129,8 +131,8 @@ function screen(ws) {
         op: 18,
         d: {
             type: "guild",
-            guild_id: "822789081309773836",
-            channel_id: "822789081749651456",
+            guild_id: process.env.guild_id,
+            channel_id: process.env.channel_id,
             preferred_region: null
         }
     }), () => {
@@ -139,7 +141,7 @@ function screen(ws) {
             op: 22,
             d: {
                 paused: false,
-                stream_key: "guild:822789081309773836:822789081749651456:820709017516769281"
+                stream_key: `guild:${process.env.guild_id}:${process.env.channel_id}:${process.env.user_id}`
             }
         }), () => console.log("Stream started"))
     })

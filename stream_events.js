@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
+require('dotenv').config()
 
 // Authenticate
 function authenticate(ws, mdata) {
@@ -6,7 +7,7 @@ function authenticate(ws, mdata) {
         op: 0,
         d: {
             server_id: mdata.server_id,
-            user_id: "820709017516769281",
+            user_id: process.env.user_id,
             session_id: mdata.session_id,
             token: mdata.token,
             video: true,
